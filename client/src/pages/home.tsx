@@ -19,7 +19,15 @@ export default function Home() {
   const [hasHotTub, setHasHotTub] = useState(false);
   const [hasSkiAccess, setHasSkiAccess] = useState(false);
   const [hasFireplace, setHasFireplace] = useState(false);
-
+  const clearFilters = () => {
+        setSearchLocation("");
+        setPriceRange("all");
+        setBedrooms("all");
+        setBathrooms("all");
+        setHasHotTub(false);
+        setHasSkiAccess(false);
+        setHasFireplace(false);
+  };
   const buildQueryString = () => {
     const params = new URLSearchParams();
     
@@ -193,9 +201,12 @@ export default function Home() {
             className="gap-2"
             data-testid="button-filter-fireplace"
           >
+            
             <Flame className="h-4 w-4" />
             Fireplace
-          </Button>
+          </
+          Button>
+          <Button variant="outline" size="sm" onClick={clearFilters} className="gap-2">Clear Filters</Button>
         </div>
 
         {isError ? (
