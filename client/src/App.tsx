@@ -7,33 +7,37 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Home from "@/pages/home";
 import ChaletDetail from "@/pages/chalet-detail";
+import ListProperty from "@/pages/list-property";
 import NotFound from "@/pages/not-found";
 
 function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/chalet/:id" component={ChaletDetail} />
-      <Route component={NotFound} />
-    </Switch>
-  );
+    return (
+          <Switch>
+                <Route path="/" component={Home} />
+                <Route path="/list-property" component={ListProperty} />
+                <Route path="/chalet/:id" component={ChaletDetail} />
+                <Route component={NotFound} />
+          </Switch>Switch>
+        );
 }
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">
-            <Router />
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
+    return (
+          <QueryClientProvider client={queryClient}>
+                <TooltipProvider>
+                        <div className="flex min-h-screen flex-col">
+                                  <Header />
+                                  <main className="flex-1">
+                                              <Router />
+                                  </main>main>
+                                  <Footer />
+                        </div>div>
+                        <Toaster />
+                </TooltipProvider>TooltipProvider>
+          </QueryClientProvider>QueryClientProvider>
+        );
 }
 
 export default App;
+    )
+}
