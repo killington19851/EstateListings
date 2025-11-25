@@ -23,6 +23,10 @@ const formSchema = z.object({
   price: z.coerce.number().min(1, "Price is required"),
   location: z.string().min(1, "Location is required"),
   imageUrl: z.string().min(1, "Image URL is required"),
+  bedrooms: z.coerce.number().min(1, "Bedrooms required"),
+  bathrooms: z.coerce.number().min(1, "Bathrooms required"),
+  sqft: z.coerce.number().min(1, "Sqft required"),
+  amenities: z.string().optional(), // We'll split this by comma
 });
 
 export default function ListProperty() {
@@ -38,20 +42,27 @@ export default function ListProperty() {
       price: 0,
       location: "",
       imageUrl: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4",
+      bedrooms: 2,
+      bathrooms: 1,
+      sqft: 1000,
+      amenities: "Wifi, Kitchen, Parking",
     },
   });
 
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await apiRequest("POST", "/api/chalets", values);
+      // Transform values to match backend schema
+      const payload = {
+        ...values,
+        images: [values.imageUrl],
+        amenities: values.amenities ? values.amenities.split(",").map(s => s.trim()) : [],
+      };
+      const res = await apiRequest("POST", "/api/chalets", payload);
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/chalets"] });
-      toast({
-        title: "Success",
-        description: "Your chalet has been listed!",
-      });
+      toast({ title: "Success", description: "Property listed successfully" });
       setLocation("/");
     },
     onError: (error) => {
@@ -68,82 +79,145 @@ export default function ListProperty() {
   }
 
   return (
-    <div className="container mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-8">List Your Chalet</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Chalet Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Cozy Mountain Cabin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Describe your property..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-2 gap-4">
+    <div className="min-h-screen pt-24 pb-16">
+      <div className="container mx-auto px-4 max-w-2xl">
+        <h1 className="text-3xl font-bold mb-8">List Your Chalet</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="price"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price per Night (                  FLP  N ()</FormLabel>
+                  <FormLabel>Chalet Name</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input placeholder="Mountain View Chalet" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="location"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Swiss Alps" {...field} />
+                    <Textarea placeholder="Describe your property..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <FormField
-            control={form.control}
-            name="imageUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image URL</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="w-full" disabled={mutation.isPending}>
-            {mutation.isPending ? "Listing..." : "List Property"}
-          </Button>
-        </form>
-      </Form>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price per Night</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Swiss Alps" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="bedrooms"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bedrooms</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bathrooms"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bathrooms</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="sqft"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sqft</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="amenities"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amenities (comma separated)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Wifi, Parking, Hot Tub" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="w-full" disabled={mutation.isPending}>
+              {mutation.isPending ? "Listing..." : "List Property"}
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }
