@@ -5,10 +5,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-registerRoutes(app).then(() => {
-  console.log("Routes registered successfully");
-}).catch((error) => {
-  console.error("Failed to register routes:", error);
-});
+registerRoutes(app);
 
 export default app;

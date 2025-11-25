@@ -3,7 +3,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "http";
 import { insertChaletSchema } from "@shared/schema";
 import { storage } from "./storage";
 
-export async function registerRoutes(app: Express) {
+export function registerRoutes(app: Express) {
   app.get("/api/chalets", async (req, res) => {
     try {
       const filters = {
