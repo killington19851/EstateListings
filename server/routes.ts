@@ -1,20 +1,17 @@
-import type { Express } from "express";
-import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import type { Express, Request, Response, NextFunction } from "express";
+import { createServer, type IncomingMessage, type ServerResponse } from "http";
 import { insertChaletSchema } from "@shared/schema";
+import { storage } from "./storage";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express) {
   app.get("/api/chalets", async (req, res) => {
     try {
       const filters = {
-        minPrice: req.query.minPrice ? parseFloat(req.query.minPrice as string) : undefined,
-        maxPrice: req.query.maxPrice ? parseFloat(req.query.maxPrice as string) : undefined,
-        bedrooms: req.query.bedrooms ? parseInt(req.query.bedrooms as string) : undefined,
-        bathrooms: req.query.bathrooms ? parseInt(req.query.bathrooms as string) : undefined,
-        location: req.query.location as string | undefined,
-        hasFireplace: req.query.hasFireplace === "true" ? true : undefined,
-        hasHotTub: req.query.hasHotTub === "true" ? true : undefined,
-        hasSkiAccess: req.query.hasSkiAccess === "true" ? true : undefined,
+        minPrice: req.query.minPrice ? parseInt(req.query.minPrice as string) : undefined,
+        maxPrice: req.query.maxPrice ? parseInt(req.query.maxPrice as string) : undefined,
+        minGuests: req.query.minGuests ? parseInt(req.query.minGuests as string) : undefined,
+        location: req.query.location as string,
+        hasWifi: req.query.hasWifi === "true" ? true : undefined,
         hasMountainView: req.query.hasMountainView === "true" ? true : undefined,
       };
 
@@ -53,7 +50,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
-
-  return httpServer;
+  // Return the app instead of creating a server
+  return app;
 }

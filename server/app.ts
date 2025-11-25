@@ -1,37 +1,10 @@
-import { type Server } from "node:http";
-
-import express, {
-  type Express,
-  type Request,
-  Response,
-  NextFunction,
-} from "express";
-
+import express from "express";
 import { registerRoutes } from "./routes";
+import { setupVite, serveStatic } from "./vite";
+import { createServer } from "http";
 
-export function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
-
-export const app = express();
-
-declare module 'http' {
-  interface IncomingMessage {
-    rawBody: unknown
-  }
-}
-app.use(express.json({
-  verify: (req, _res, buf) => {
-    req.rawBody = buf;
-  }
-}));
+const app = express();
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
@@ -48,49 +21,43 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      let logLine = `       L  {req.method}        L  $ {path}        L  $ $ {res.statusCode} in        L  $ $ $C  {duration}ms`;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        logLine += ` ::         L    {JSON.stringify(capturedJsonResponse)}`;
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+        logLine = logLine.slice(0, 79) + "        L  L( )  ";
       }
 
-      log(logLine);
+      console.log(logLine);
     }
   });
 
   next();
 });
 
-export default async function runApp(
-  setup: (app: Express, server: Server) => Promise<void>,
-) {
-  const server = await registerRoutes(app);
+registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(status).json({ message });
+  throw err;
+});
 
-    res.status(status).json({ message });
-    throw err;
-  });
+export default app;
 
-  // importantly run the final setup after setting up all the other routes so
-  // the catch-all route doesn't interfere with the other routes
-  await setup(app, server);
+export async function runApp() {
+  const server = createServer(app);
+  if (process.env.NODE_ENV !== "production") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
+  }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  const PORT = 5000;
+  server.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server started on port     (S    {PORT}`);
   });
 }

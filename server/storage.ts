@@ -1,48 +1,43 @@
-import { type User, type InsertUser, type Chalet, type InsertChalet } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { users, type User, type InsertUser, type Chalet, type InsertChalet } from "@shared/schema";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
-  getChalets(filters?: {
-    minPrice?: number;
-    maxPrice?: number;
-    bedrooms?: number;
-    bathrooms?: number;
-    location?: string;
-    hasFireplace?: boolean;
-    hasHotTub?: boolean;
-    hasSkiAccess?: boolean;
-    hasMountainView?: boolean;
-  }): Promise<Chalet[]>;
-  getChalet(id: string): Promise<Chalet | undefined>;
+
+  getChalets(): Promise<Chalet[]>;
+  getChalet(id: number): Promise<Chalet | undefined>;
   createChalet(chalet: InsertChalet): Promise<Chalet>;
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private chalets: Map<string, Chalet>;
+  private users: Map<number, User>;
+  private chalets: Map<number, Chalet>;
+  private currentUserId: number;
+  private currentChaletId: number;
 
   constructor() {
     this.users = new Map();
     this.chalets = new Map();
-    this.initializeSampleChalets();
-  }
+    this.currentUserId = 1;
+    this.currentChaletId = 1;
 
-  private initializeSampleChalets() {
-    const sampleChalets: InsertChalet[] = [
+    // Seed initial chalets
+    const demoChalets: InsertChalet[] = [
       {
-        title: "Alpine Paradise Retreat",
-        location: "Chamonix, French Alps",
-        description: "Stunning luxury chalet with panoramic mountain views, modern amenities, and direct ski access. Perfect for families or groups seeking the ultimate alpine experience. Features include heated floors, a gourmet kitchen, and a private sauna.",
-        price: 850,
+        title: "Alpine Luxury Lodge",
+        location: "Zermatt, Switzerland",
+        description: "Experience the epitome of luxury in this stunning chalet with panoramic Matterhorn views. Features floor-to-ceiling windows, a private spa, and direct ski-in/ski-out access.",
+        price: 1200,
         bedrooms: 5,
         bathrooms: 4,
-        sqft: 3200,
-        images: ["modern_luxury_chalet_exterior.png"],
-        amenities: ["Wi-Fi", "Fireplace", "Hot Tub", "Ski Storage", "Mountain View", "Sauna", "Heated Floors", "Gourmet Kitchen"],
+        sqft: 3500,
+        images: [
+          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80",
+        ],
+        amenities: ["WiFi", "Spa", "Ski-in/Ski-out", "Fireplace", "Chef Service"],
         hasFireplace: true,
         hasHotTub: true,
         hasSkiAccess: true,
@@ -50,31 +45,79 @@ export class MemStorage implements IStorage {
         maxGuests: 10,
       },
       {
-        title: "Rustic Mountain Haven",
-        location: "Zermatt, Switzerland",
-        description: "Charming traditional chalet with authentic wooden interiors and breathtaking views of the Matterhorn. Cozy atmosphere with modern comforts, featuring a stone fireplace and exposed timber beams throughout.",
-        price: 650,
+        title: "Cozy Mountain Retreat",
+        location: "Aspen, Colorado",
+        description: "A charming rustic chalet nestled in the heart of the Rockies. Perfect for family getaways with a warm fireplace and easy access to hiking trails.",
+        price: 850,
+        bedrooms: 3,
+        bathrooms: 2,
+        sqft: 2100,
+        images: [
+          "https://images.unsplash.com/photo-1449156493391-d2cfa28e468b?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80",
+        ],
+        amenities: ["WiFi", "Fireplace", "Hot Tub", "Parking"],
+        hasFireplace: true,
+        hasHotTub: true,
+        hasSkiAccess: false,
+        hasMountainView: true,
+        maxGuests: 6,
+      },
+      {
+        title: "Vista Peak Chalet",
+        location: "Whistler, Canada",
+        description: "Modern design meets alpine tradition. This chalet offers spectacular views, a gourmet kitchen, and a private outdoor hot tub.",
+        price: 950,
         bedrooms: 4,
         bathrooms: 3,
-        sqft: 2400,
-        images: ["traditional_rustic_alpine_chalet.png"],
-        amenities: ["Wi-Fi", "Fireplace", "Mountain View", "Balcony", "Wood Stove", "Cable TV", "Washer/Dryer"],
+        sqft: 2800,
+        images: [
+          "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80",
+        ],
+        amenities: ["WiFi", "Hot Tub", "Gourmet Kitchen", "Mountain View"],
         hasFireplace: true,
-        hasHotTub: false,
+        hasHotTub: true,
         hasSkiAccess: true,
         hasMountainView: true,
         maxGuests: 8,
       },
       {
-        title: "Contemporary Summit Lodge",
-        location: "Aspen, Colorado",
-        description: "Modern A-frame chalet with floor-to-ceiling windows offering spectacular mountain vistas. Features sleek contemporary design, spa-like bathrooms, and a chef's kitchen. Ski-in/ski-out access to world-class slopes.",
-        price: 1200,
+        title: "Lakeside Haven",
+        location: "Lake Tahoe, USA",
+        description: "Peaceful lakeside chalet with private dock and stunning water views. Ideal for summer and winter retreats.",
+        price: 1100,
+        bedrooms: 4,
+        bathrooms: 3,
+        sqft: 3000,
+        images: [
+          "https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1593696140826-c58b5e6368d6?auto=format&fit=crop&q=80",
+        ],
+        amenities: ["WiFi", "Lake Access", "Fireplace", "Boat Dock"],
+        hasFireplace: true,
+        hasHotTub: false,
+        hasSkiAccess: true,
+        hasMountainView: true,
+        maxGuests: 10,
+      },
+      {
+        title: "Skyline Chalet",
+        location: "Chamonix, France",
+        description: "High-altitude chalet offering breathtaking views of Mont Blanc. Modern amenities combined with traditional charm.",
+        price: 1500,
         bedrooms: 6,
         bathrooms: 5,
-        sqft: 4500,
-        images: ["contemporary_a-frame_chalet_design.png"],
-        amenities: ["Wi-Fi", "Fireplace", "Hot Tub", "Ski Storage", "Mountain View", "Home Theater", "Wine Cellar", "Game Room"],
+        sqft: 4000,
+        images: [
+          "https://images.unsplash.com/photo-1464288550599-deb4d543fc11?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1502005229766-3c8ef95a5d78?auto=format&fit=crop&q=80",
+        ],
+        amenities: ["WiFi", "Sauna", "Ski Room", "Concierge"],
         hasFireplace: true,
         hasHotTub: true,
         hasSkiAccess: true,
@@ -82,94 +125,34 @@ export class MemStorage implements IStorage {
         maxGuests: 12,
       },
       {
-        title: "Lakeside Alpine Escape",
-        location: "Whistler, British Columbia",
-        description: "Exclusive multi-level chalet with stunning lake and mountain views. Featuring wrap-around decks, outdoor hot tub, and proximity to Whistler Blackcomb. Perfect blend of luxury and nature.",
-        price: 950,
-        bedrooms: 5,
-        bathrooms: 4,
-        sqft: 3800,
-        images: ["upscale_alpine_lodge_hot_tub.png"],
-        amenities: ["Wi-Fi", "Hot Tub", "Mountain View", "Lake View", "BBQ Grill", "Fire Pit", "Deck", "Parking"],
-        hasFireplace: true,
-        hasHotTub: true,
-        hasSkiAccess: false,
-        hasMountainView: true,
-        maxGuests: 10,
-      },
-      {
-        title: "Summer Meadow Chalet",
-        location: "Interlaken, Switzerland",
-        description: "Picturesque chalet surrounded by wildflower meadows with stunning mountain backdrop. Ideal for summer retreats, hiking adventures, and peaceful relaxation. Features traditional alpine architecture with modern updates.",
-        price: 450,
-        bedrooms: 3,
-        bathrooms: 2,
-        sqft: 1800,
-        images: ["summer_alpine_chalet_meadow.png"],
-        amenities: ["Wi-Fi", "Mountain View", "Garden", "Hiking Trails", "Bike Storage", "Terrace", "BBQ"],
-        hasFireplace: true,
-        hasHotTub: false,
-        hasSkiAccess: false,
-        hasMountainView: true,
-        maxGuests: 6,
-      },
-      {
-        title: "Grand Ski-In Ski-Out Estate",
-        location: "Val d'Isère, France",
-        description: "Luxurious mountain estate offering unparalleled ski-in/ski-out access. Expansive living spaces, premium finishes, and breathtaking alpine views. Perfect for discerning guests seeking the finest mountain experience.",
-        price: 1500,
-        bedrooms: 7,
-        bathrooms: 6,
-        sqft: 5200,
-        images: ["grand_ski-in_ski-out_estate.png"],
-        amenities: ["Wi-Fi", "Fireplace", "Hot Tub", "Ski Storage", "Mountain View", "Cinema Room", "Gym", "Concierge", "Private Chef Available"],
-        hasFireplace: true,
-        hasHotTub: true,
-        hasSkiAccess: true,
-        hasMountainView: true,
-        maxGuests: 14,
-      },
-      {
-        title: "Cozy Winter Cabin",
-        location: "Lake Tahoe, California",
-        description: "Intimate mountain cabin perfect for romantic getaways or small families. Wood-burning fireplace, cozy interiors, and stunning winter views. Close to skiing and hiking trails.",
-        price: 350,
+        title: "Nordic Escape",
+        location: "Rovaniemi, Finland",
+        description: "Glass-roofed chalet perfect for viewing the Northern Lights. Provides a unique Arctic experience with luxury comfort.",
+        price: 1300,
         bedrooms: 2,
         bathrooms: 2,
-        sqft: 1200,
-        images: ["cozy_intimate_mountain_cabin.png"],
-        amenities: ["Wi-Fi", "Fireplace", "Mountain View", "Wood Stove", "Deck", "Parking"],
+        sqft: 1500,
+        images: [
+          "https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1515224526905-51c7d77c7bb8?auto=format&fit=crop&q=80",
+          "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80",
+        ],
+        amenities: ["WiFi", "Glass Roof", "Sauna", "Fireplace"],
         hasFireplace: true,
         hasHotTub: false,
         hasSkiAccess: false,
-        hasMountainView: true,
+        hasMountainView: false,
         maxGuests: 4,
-      },
-      {
-        title: "Ultra-Luxury Mountain Villa",
-        location: "St. Moritz, Switzerland",
-        description: "Extraordinary alpine villa featuring an infinity pool with mountain views, contemporary architecture, and world-class amenities. The pinnacle of luxury mountain living with every detail perfected.",
-        price: 2500,
-        bedrooms: 8,
-        bathrooms: 7,
-        sqft: 6800,
-        images: ["luxury_chalet_infinity_pool.png"],
-        amenities: ["Wi-Fi", "Fireplace", "Hot Tub", "Infinity Pool", "Mountain View", "Spa", "Gym", "Wine Cellar", "Home Theater", "Concierge", "Private Chef", "Helipad"],
-        hasFireplace: true,
-        hasHotTub: true,
-        hasSkiAccess: true,
-        hasMountainView: true,
-        maxGuests: 16,
       },
     ];
 
-    sampleChalets.forEach(chalet => {
-      const id = randomUUID();
-      this.chalets.set(id, { ...chalet, id });
+    demoChalets.forEach((chalet) => {
+      const id = this.currentChaletId++;
+      this.chalets.set(id, { ...chalet, id: id.toString() });
     });
   }
 
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: number): Promise<User | undefined> {
     return this.users.get(id);
   }
 
@@ -180,67 +163,23 @@ export class MemStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const id = this.currentUserId++;
+    const user: User = { ...insertUser, id: id.toString() };
     this.users.set(id, user);
     return user;
   }
 
-  async getChalets(filters?: {
-    minPrice?: number;
-    maxPrice?: number;
-    bedrooms?: number;
-    bathrooms?: number;
-    location?: string;
-    hasFireplace?: boolean;
-    hasHotTub?: boolean;
-    hasSkiAccess?: boolean;
-    hasMountainView?: boolean;
-  }): Promise<Chalet[]> {
-    let chalets = Array.from(this.chalets.values());
-
-    if (filters) {
-      if (filters.minPrice !== undefined) {
-        chalets = chalets.filter(c => c.price >= filters.minPrice!);
-      }
-      if (filters.maxPrice !== undefined) {
-        chalets = chalets.filter(c => c.price <= filters.maxPrice!);
-      }
-      if (filters.bedrooms !== undefined) {
-        chalets = chalets.filter(c => c.bedrooms >= filters.bedrooms!);
-      }
-      if (filters.bathrooms !== undefined) {
-        chalets = chalets.filter(c => c.bathrooms >= filters.bathrooms!);
-      }
-      if (filters.location) {
-        chalets = chalets.filter(c => 
-          c.location.toLowerCase().includes(filters.location!.toLowerCase())
-        );
-      }
-      if (filters.hasFireplace !== undefined) {
-        chalets = chalets.filter(c => c.hasFireplace === filters.hasFireplace);
-      }
-      if (filters.hasHotTub !== undefined) {
-        chalets = chalets.filter(c => c.hasHotTub === filters.hasHotTub);
-      }
-      if (filters.hasSkiAccess !== undefined) {
-        chalets = chalets.filter(c => c.hasSkiAccess === filters.hasSkiAccess);
-      }
-      if (filters.hasMountainView !== undefined) {
-        chalets = chalets.filter(c => c.hasMountainView === filters.hasMountainView);
-      }
-    }
-
-    return chalets;
+  async getChalets(): Promise<Chalet[]> {
+    return Array.from(this.chalets.values());
   }
 
-  async getChalet(id: string): Promise<Chalet | undefined> {
+  async getChalet(id: number): Promise<Chalet | undefined> {
     return this.chalets.get(id);
   }
 
   async createChalet(insertChalet: InsertChalet): Promise<Chalet> {
-    const id = randomUUID();
-    const chalet: Chalet = { ...insertChalet, id };
+    const id = this.currentChaletId++;
+    const chalet: Chalet = { ...insertChalet, id: id.toString() };
     this.chalets.set(id, chalet);
     return chalet;
   }

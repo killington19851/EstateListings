@@ -1,12 +1,14 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
 import { registerRoutes } from "../server/routes";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Register routes
-registerRoutes(app);
+registerRoutes(app).then(() => {
+  console.log("Routes registered successfully");
+}).catch((error) => {
+  console.error("Failed to register routes:", error);
+});
 
-// Export the app for Vercel serverless functions
 export default app;
