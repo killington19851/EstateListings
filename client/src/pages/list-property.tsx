@@ -101,12 +101,12 @@ export default function ListProperty() {
                                                 name="title"
                                                 render={({ field }) => (
                                                                 <FormItem>
-                                                                                <FormLabel>Chalet Name</FormLabel>FormLabel>
+                                                                                <FormLabel>Chalet Name</FormLabel>
                                                                                 <FormControl>
                                                                                                   <Input placeholder="Alpine Haven" {...field} />
-                                                                                </FormControl>FormControl>
+                                                                                </FormControl>
                                                                                 <FormMessage />
-                                                                </FormItem>FormItem>
+                                                                </FormItem>
                                               )}
                                             />
                                   
@@ -115,12 +115,12 @@ export default function ListProperty() {
                                                           name="description"
                                                           render={({ field }) => (
                                                                           <FormItem>
-                                                                                          <FormLabel>Description</FormLabel>FormLabel>
+                                                                                          <FormLabel>Description</FormLabel>
                                                                                           <FormControl>
                                                                                                             <Textarea placeholder="Beautiful chalet with mountain views..." {...field} />
-                                                                                            </FormControl>FormControl>
+                                                                                            </FormControl>
                                                                                           <FormMessage />
-                                                                          </FormItem>FormItem>
+                                                                          </FormItem>
                                                         )}
                                                       />
                                             
@@ -130,12 +130,12 @@ export default function ListProperty() {
                                                                                   name="price"
                                                                                   render={({ field }) => (
                                                                                                     <FormItem>
-                                                                                                                      <FormLabel>Price per Night ($)</FormLabel>FormLabel>
+                                                                                                                      <FormLabel>Price per Night ($)</FormLabel>
                                                                                                                       <FormControl>
                                                                                                                                           <Input type="number" {...field} />
-                                                                                                                        </FormControl>FormControl>
+                                                                                                                        </FormControl>
                                                                                                                       <FormMessage />
-                                                                                                      </FormItem>FormItem>
+                                                                                                      </FormItem>
                                                                                 )}
                                                                               />
                                                                               <FormField
@@ -143,15 +143,15 @@ export default function ListProperty() {
                                                                                               name="location"
                                                                                               render={({ field }) => (
                                                                                                                 <FormItem>
-                                                                                                                                  <FormLabel>Location</FormLabel>FormLabel>
+                                                                                                                                  <FormLabel>Location</FormLabel>
                                                                                                                                   <FormControl>
                                                                                                                                                       <Input placeholder="Zermatt, Switzerland" {...field} />
-                                                                                                                                    </FormControl>FormControl>
+                                                                                                                                    </FormControl>
                                                                                                                                   <FormMessage />
-                                                                                                                  </FormItem>FormItem>
+                                                                                                                  </FormItem>
                                                                                             )}
                                                                                           />
-                                                                              </FormField>div>
+                                                                              </FormField>
                                                                   
                                                                             <div className="grid grid-cols-2 gap-4">
                                                                                         <FormField
@@ -159,12 +159,12 @@ export default function ListProperty() {
                                                                                                         name="bedrooms"
                                                                                                         render={({ field }) => (
                                                                                                                           <FormItem>
-                                                                                                                                            <FormLabel>Bedrooms</FormLabel>FormLabel>
+                                                                                                                                            <FormLabel>Bedrooms</FormLabel>
                                                                                                                                             <FormControl>
                                                                                                                                                                 <Input type="number" {...field} />
-                                                                                                                                              </FormControl>FormControl>
+                                                                                                                                              </FormControl>
                                                                                                                                             <FormMessage />
-                                                                                                                            </FormItem>FormItem>
+                                                                                                                            </FormItem>
                                                                                                       )}
                                                                                                     />
                                                                                                     <FormField
@@ -172,15 +172,15 @@ export default function ListProperty() {
                                                                                                                     name="bathrooms"
                                                                                                                     render={({ field }) => (
                                                                                                                                       <FormItem>
-                                                                                                                                                        <FormLabel>Bathrooms</FormLabel>FormLabel>
+                                                                                                                                                        <FormLabel>Bathrooms</FormLabel>
                                                                                                                                                         <FormControl>
                                                                                                                                                                             <Input type="number" {...field} />
-                                                                                                                                                          </FormControl>FormControl>
+                                                                                                                                                          </FormControl>
                                                                                                                                                         <FormMessage />
-                                                                                                                                        </FormItem>FormItem>
+                                                                                                                                        </FormItem>
                                                                                                                   )}
                                                                                                                 />
-                                                                                                      </FormField>div>
+                                                                                                      </FormField>
                                                                                         
                                                                                                   <div className="grid grid-cols-2 gap-4">
                                                                                                               <FormField
@@ -188,12 +188,12 @@ export default function ListProperty() {
                                                                                                                               name="sqft"
                                                                                                                               render={({ field }) => (
                                                                                                                                                 <FormItem>
-                                                                                                                                                                  <FormLabel>Square Footage</FormLabel>FormLabel>
+                                                                                                                                                                  <FormLabel>Square Footage</FormLabel>
                                                                                                                                                                   <FormControl>
                                                                                                                                                                                       <Input type="number" {...field} />
-                                                                                                                                                                    </FormControl>FormControl>
+                                                                                                                                                                    </FormControl>
                                                                                                                                                                   <FormMessage />
-                                                                                                                                                  </FormItem>FormItem>
+                                                                                                                                                  </FormItem>
                                                                                                                             )}
                                                                                                                           />
                                                                                                                           <FormField
@@ -201,27 +201,27 @@ export default function ListProperty() {
                                                                                                                                           name="maxGuests"
                                                                                                                                           render={({ field }) => (
                                                                                                                                                             <FormItem>
-                                                                                                                                                                              <FormLabel>Max Guests</FormLabel>FormLabel>
+                                                                                                                                                                              <FormLabel>Max Guests</FormLabel>
                                                                                                                                                                               <FormControl>
                                                                                                                                                                                                   <Input type="number" {...field} />
-                                                                                                                                                                                </FormControl>FormControl>
+                                                                                                                                                                                </FormControl>
                                                                                                                                                                               <FormMessage />
-                                                                                                                                                              </FormItem>FormItem>
+                                                                                                                                                              </FormItem>
                                                                                                                                         )}
                                                                                                                                       />
-                                                                                                                            </FormField>div>
+                                                                                                                            </FormField>
                                                                                                               
                                                                                                                         <FormField
                                                                                                                                       control={form.control}
                                                                                                                                       name="amenities"
                                                                                                                                       render={({ field }) => (
                                                                                                                                                       <FormItem>
-                                                                                                                                                                      <FormLabel>Amenities (comma separated)</FormLabel>FormLabel>
+                                                                                                                                                                      <FormLabel>Amenities (comma separated)</FormLabel>
                                                                                                                                                                       <FormControl>
                                                                                                                                                                                         <Input placeholder="Wifi, Kitchen, Parking" {...field} />
-                                                                                                                                                                        </FormControl>FormControl>
+                                                                                                                                                                        </FormControl>
                                                                                                                                                                       <FormMessage />
-                                                                                                                                                        </FormItem>FormItem>
+                                                                                                                                                        </FormItem>
                                                                                                                                     )}
                                                                                                                                   />
                                                                                                                         
@@ -230,12 +230,12 @@ export default function ListProperty() {
                                                                                                                                                 name="imageUrl"
                                                                                                                                                 render={({ field }) => (
                                                                                                                                                                 <FormItem>
-                                                                                                                                                                                <FormLabel>Image URL</FormLabel>FormLabel>
+                                                                                                                                                                                <FormLabel>Image URL</FormLabel>
                                                                                                                                                                                 <FormControl>
                                                                                                                                                                                                   <Input placeholder="https://..." {...field} />
-                                                                                                                                                                                  </FormControl>FormControl>
+                                                                                                                                                                                  </FormControl>
                                                                                                                                                                                 <FormMessage />
-                                                                                                                                                                  </FormItem>FormItem>
+                                                                                                                                                                  </FormItem>
                                                                                                                                               )}
                                                                                                                                             />
                                                                                                                                   
@@ -250,11 +250,11 @@ export default function ListProperty() {
                                                                                                                                                                                                                                                         checked={field.value}
                                                                                                                                                                                                                                                         onCheckedChange={field.onChange}
                                                                                                                                                                                                                                                       />
-                                                                                                                                                                                                                              </FormControl>FormControl>
+                                                                                                                                                                                                                              </FormControl>
                                                                                                                                                                                                             <div className="space-y-1 leading-none">
-                                                                                                                                                                                                                                <FormLabel>Has Fireplace</FormLabel>FormLabel>
-                                                                                                                                                                                                                              </div>div>
-                                                                                                                                                                                                          </FormItem>FormItem>
+                                                                                                                                                                                                                                <FormLabel>Has Fireplace</FormLabel>
+                                                                                                                                                                                                                              </div>
+                                                                                                                                                                                                          </FormItem>
                                                                                                                                                                       )}
                                                                                                                                                                     />
                                                                                                                                                                     <FormField
@@ -267,11 +267,11 @@ export default function ListProperty() {
                                                                                                                                                                                                                                                                     checked={field.value}
                                                                                                                                                                                                                                                                     onCheckedChange={field.onChange}
                                                                                                                                                                                                                                                                   />
-                                                                                                                                                                                                                                          </FormControl>FormControl>
+                                                                                                                                                                                                                                          </FormControl>
                                                                                                                                                                                                                         <div className="space-y-1 leading-none">
-                                                                                                                                                                                                                                            <FormLabel>Has Hot Tub</FormLabel>FormLabel>
-                                                                                                                                                                                                                                          </div>div>
-                                                                                                                                                                                                                      </FormItem>FormItem>
+                                                                                                                                                                                                                                            <FormLabel>Has Hot Tub</FormLabel>
+                                                                                                                                                                                                                                          </div>
+                                                                                                                                                                                                                      </FormItem>
                                                                                                                                                                                   )}
                                                                                                                                                                                 />
                                                                                                                                                                                 <FormField
@@ -284,11 +284,11 @@ export default function ListProperty() {
                                                                                                                                                                                                                                                                                 checked={field.value}
                                                                                                                                                                                                                                                                                 onCheckedChange={field.onChange}
                                                                                                                                                                                                                                                                               />
-                                                                                                                                                                                                                                                      </FormControl>FormControl>
+                                                                                                                                                                                                                                                      </FormControl>
                                                                                                                                                                                                                                     <div className="space-y-1 leading-none">
-                                                                                                                                                                                                                                                        <FormLabel>Ski-in/Ski-out</FormLabel>FormLabel>
-                                                                                                                                                                                                                                                      </div>div>
-                                                                                                                                                                                                                                  </FormItem>FormItem>
+                                                                                                                                                                                                                                                        <FormLabel>Ski-in/Ski-out</FormLabel>
+                                                                                                                                                                                                                                                      </div>
+                                                                                                                                                                                                                                  </FormItem>
                                                                                                                                                                                               )}
                                                                                                                                                                                             />
                                                                                                                                                                                             <FormField
@@ -301,21 +301,21 @@ export default function ListProperty() {
                                                                                                                                                                                                                                                                                             checked={field.value}
                                                                                                                                                                                                                                                                                             onCheckedChange={field.onChange}
                                                                                                                                                                                                                                                                                           />
-                                                                                                                                                                                                                                                                  </FormControl>FormControl>
+                                                                                                                                                                                                                                                                  </FormControl>
                                                                                                                                                                                                                                                 <div className="space-y-1 leading-none">
-                                                                                                                                                                                                                                                                    <FormLabel>Mountain View</FormLabel>FormLabel>
-                                                                                                                                                                                                                                                                  </div>div>
-                                                                                                                                                                                                                                              </FormItem>FormItem>
+                                                                                                                                                                                                                                                                    <FormLabel>Mountain View</FormLabel>
+                                                                                                                                                                                                                                                                  </div>
+                                                                                                                                                                                                                                              </FormItem>
                                                                                                                                                                                                           )}
                                                                                                                                                                                                         />
-                                                                                                                                                                                              </FormField>div>
+                                                                                                                                                                                              </FormField>
                                                                                                                                                                                 
                                                                                                                                                                                           <Button type="submit" className="w-full" disabled={mutation.isPending}>
                                                                                                                                                                                             {mutation.isPending ? "Listing Property..." : "List Property"}
-                                                                                                                                                                                            </Button>Button>
-                                                                                                                                                                                  </FormField>form>
-                                                                                                                                                                      </FormField>Form>
-                                                                                                                                                          </FormField>div>
+                                                                                                                                                                                            </Button>
+                                                                                                                                                                                  </FormField>
+                                                                                                                                                                      </FormField>
+                                                                                                                                                          </FormField>
                                                                                                                                               );
                                                                                                                                               }</div>
     )
