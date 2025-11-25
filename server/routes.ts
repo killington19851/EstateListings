@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { insertChaletSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/chalets", async (req, res) => {
@@ -28,7 +29,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const chalet = await storage.getChalet(id);
-      
+
       if (!chalet) {
         return res.status(404).json({ error: "Chalet not found" });
       }
@@ -36,6 +37,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(chalet);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch chalet" });
+    }
+  });
+
+  app.post("/api/chalets", async (req, res) => {
+    try {
+      const parsed = insertChaletSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ error: "Invalid chalet data" });
+      }
+      const chalet = await storage.createChalet(parsed.data);
+      res.status(201).json(chalet);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create chalet" });
     }
   });
 

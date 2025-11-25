@@ -34,9 +34,11 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="hidden sm:inline-flex" data-testid="button-list-property">
-            List Your Property
-          </Button>
+          <Link href="/list-property">
+            <Button variant="outline" className="hidden sm:inline-flex" data-testid="button-list-property">
+              List Your Property
+            </Button>
+          </Link>
           <Button data-testid="button-contact">Contact Us</Button>
         </div>
       </div>
