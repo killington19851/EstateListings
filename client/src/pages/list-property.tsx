@@ -317,7 +317,7 @@ export default function ListProperty() {
                                                                                                                                                                       </FormField>
                                                                                                                                                           </FormField>
                                                                                                                                               );
-                                                                                                                                              }</div>
+                                                                                                                                              }
     )
     }
                   })
