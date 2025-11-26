@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser, type Chalet, type InsertChalet } from "@shared/schema";
+import { users, type User, type InsertUser, type Chalet, type InsertChalet } from "../shared/schema";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;

@@ -1,6 +1,6 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type IncomingMessage, type ServerResponse } from "http";
-import { insertChaletSchema } from "@shared/schema";
+import { insertChaletSchema } from "../shared/schema";
 import { storage } from "./storage";
 
 export function registerRoutes(app: Express) {
